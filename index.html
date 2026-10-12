@@ -320,7 +320,6 @@ main:focus-visible { outline: none; }
 .program-card .sub { color: var(--muted); font-size: 14px; }
 .program-card .meta { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 14px; gap: 10px; flex-wrap: wrap; }
 .price { font-size: 24px; font-weight: 800; line-height: 1; color: var(--accent); }
-.price s { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
 .go { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
 
 .back { display: inline-block; margin-bottom: 14px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; }
@@ -506,7 +505,7 @@ textarea.input { min-height: 84px; resize: vertical; }
         'Персональний чат',
         'Відслідковування результату кожного тижня'
       ],
-      notes: ['Кількість місць обмежена', 
+      notes: ['Кількість місць обмежена'],
       tgText: 'Вітаю! Хочу на онлайн тренування з супроводом. Можна детальніше про курс ?',
       demoNote: 'У справжньому супроводі план індивідуальний. Тут показано лише приклад екрана, без реального плану.',
       demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(5) }
@@ -523,6 +522,7 @@ textarea.input { min-height: 84px; resize: vertical; }
         'Підходить для будь-якого рівня',
         'Для тренувань в тренажерному залі'
       ],
+      notes: [],
       tgText: 'Вітаю! Хочу придбати онлайн тренування для хлопців. Можна детальніше про курс ?',
       demoNote: 'Реальні вправи цієї програми доступні лише в матеріалах тренера. Тут умовні заготовки.',
       demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(5) }
@@ -539,6 +539,7 @@ textarea.input { min-height: 84px; resize: vertical; }
         'Підходить для будь-якого рівня',
         'Для тренувань в тренажерному залі'
       ],
+      notes: [],
       tgText: 'Вітаю! Хочу придбати онлайн тренування для дівчат. Можна детальніше про курс ?',
       demoNote: 'Реальні вправи цієї програми доступні лише в матеріалах тренера. Тут умовні заготовки.',
       demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(5) }
@@ -555,6 +556,7 @@ textarea.input { min-height: 84px; resize: vertical; }
         'Підходить для всіх, хто має біль в спині',
         'Для тренувань в домашніх умовах'
       ],
+      notes: [],
       tgText: 'Вітаю! Хочу придбати програму "Здорова спина". Можна детальніше про курс ?',
       demoNote: 'Це лише приклад екрана. Умовні заготовки не є вправами для спини, їх не слід виконувати. Реальну програму надає тренер.',
       demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(4) }
@@ -759,7 +761,7 @@ textarea.input { min-height: 84px; resize: vertical; }
   }
 
   function priceHtml(p) {
-    return '<div class="price">' + p.price + ' грн<s>' + p.oldPrice + ' грн</s></div>';
+    return '<div class="price">' + p.price + ' грн</div>';
   }
 
   /* ---------- Екран 1: Головна ---------- */
@@ -864,7 +866,7 @@ textarea.input { min-height: 84px; resize: vertical; }
         '<section class="card"><h3 style="margin-bottom:8px">Що входить</h3><ul class="checks">' + features + '</ul></section>' +
         '<section class="card">' +
           priceHtml(p) +
-          '<ul class="small muted" style="margin:12px 0 0;padding-left:18px">' + notes + '</ul>' +
+          (p.notes.length ? '<ul class="small muted" style="margin:12px 0 0;padding-left:18px">' + notes + '</ul>' : '') +
           '<p class="muted small" style="margin-top:8px">Ціни за даними сайту станом на перегляд.</p>' +
         '</section>' +
         '<section class="stack">' +
