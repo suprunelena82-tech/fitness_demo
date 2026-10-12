@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111214">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Chepelev Fit · Мій план (демо)</title>
+  <meta name="description" content="Демонстраційний прототип застосунку для клієнтів тренера Влада Чепелева.">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzE4MWExYyIvPgogIDxyZWN0IHg9IjY0IiB5PSI2NCIgd2lkdGg9IjM4NCIgaGVpZ2h0PSIzODQiIHJ4PSI4NCIgZmlsbD0iI2Y2Y2ExYSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMzIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIxOTAiIGZpbGw9IiMxNDE0MTQiPkNGPC90ZXh0Pgo8L3N2Zz4K" type="image/svg+xml">
+
+  <!-- Шрифт: схоже на Montserrat (візуальне припущення зі скриншотів сайту).
+       Безкоштовний Google Fonts; без нього застосунок працює із системним шрифтом.
+       Щоб прибрати зовнішній запит, видаліть ці три рядки. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap">
+<style>
+/* ==========================================================================
+   ДИЗАЙН-ТОКЕНИ Chepelev Fit (демо)
+
+   Кольори блоку «BRAND» ВИМІРЯНО з пікселів двох скриншотів сайту
+   chepelevfit.com (перший екран і блок «Мій досвід і досягнення»).
+   Блок «ПОХІДНІ» додано для інтерфейсу застосунку, на сайті їх немає.
+   Шрифт: на сайті, схоже, Montserrat, але це візуальне припущення,
+   а не перевірене значення з коду сайту.
+   Змінювати палітру потрібно ТІЛЬКИ тут.
+   ========================================================================== */
+:root {
+  /* ----- BRAND: виміряно зі скриншотів ----- */
+  --brand-yellow: #f6ca1a;         /* заголовки, цифри, іконки, чекмарки */
+  --brand-yellow-border: #d6b11a;  /* межі карток «досягнень» */
+  --brand-btn-from: #f7cb1b;       /* кнопка: градієнт зліва */
+  --brand-btn-to: #e9ca4c;         /* кнопка: градієнт справа */
+  --brand-btn-lip: #c7a418;        /* темніший нижній край кнопки */
+  --brand-ink: #141414;            /* текст на жовтому */
+  --brand-bg: #181a1c;             /* фон сторінки (на сайті з легкою текстурою) */
+  --brand-bar: #111214;            /* верхня панель */
+  --brand-card: #4f5054;           /* сірі картки */
+  --brand-text: #f2f2f2;           /* основний текст */
+  --brand-nav: #d2d2d2;            /* текст меню */
+
+  /* ----- ПОХІДНІ: для інтерфейсу застосунку ----- */
+  --bg-outer: #0d0e0f;             /* фон за межами «телефона» на великих екранах */
+  --bg: var(--brand-bg);
+  --bar: var(--brand-bar);
+  --surface: #222427;              /* звичайні картки */
+  --surface-2: #2b2d31;            /* поля вводу, вкладені блоки */
+  --line: #2e3135;
+  --line-strong: #43464c;
+
+  --text: var(--brand-text);
+  --muted: #a9acb2;
+
+  --accent: var(--brand-yellow);
+  --accent-ink: var(--brand-ink);
+  --accent-soft: rgba(246, 202, 26, 0.12);
+
+  /* Позначки «ДЕМО» навмисно НЕ жовті, щоб їх не сплутали з брендом */
+  --demo: #b79bff;
+  --demo-soft: rgba(183, 155, 255, 0.14);
+  --demo-line: rgba(183, 155, 255, 0.5);
+
+  /* Форма й розміри */
+  --radius: 12px;
+  --radius-s: 10px;
+  --radius-btn: 14px;
+  --app-w: 480px;
+  --tabbar-h: 64px;
+
+  /* Шрифт: Montserrat підключається в index.html; без нього працює системний */
+  --font: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg-outer);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+  position: relative;
+  max-width: var(--app-w);
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background:
+    radial-gradient(900px 360px at 50% -120px, rgba(255, 255, 255, 0.045), transparent 70%),
+    var(--bg);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+/* ---------- Верхня панель ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  background: rgba(17, 18, 20, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Текстова версія логотипа: CHEPELEV над FITNESS (справжній файл логотипа не використано) */
+.logo { display: inline-block; color: var(--text); text-decoration: none; }
+.logo b {
+  display: block;
+  font-size: 17px; font-weight: 800; letter-spacing: 0.14em; line-height: 1;
+}
+.logo small {
+  display: block; margin-top: 4px; text-align: center;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.38em; color: var(--brand-nav);
+  padding-left: 0.38em; /* вирівнює за центром попри інтервал останньої літери */
+}
+
+.icon-btn {
+  display: grid; place-items: center;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--line-strong);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ---------- Смуга «демо» ---------- */
+.demo-strip {
+  padding: 6px 16px;
+  background: var(--demo-soft);
+  color: var(--demo);
+  font-size: 12px;
+  line-height: 1.35;
+  border-bottom: 1px solid var(--demo-line);
+}
+.demo-strip b { letter-spacing: 0.08em; }
+
+/* ---------- Контент ---------- */
+main {
+  padding: 18px 16px calc(var(--tabbar-h) + 28px + env(safe-area-inset-bottom));
+  outline: none;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  line-height: 1.18;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  overflow-wrap: break-word;
+}
+h1 { font-size: 27px; font-weight: 800; color: var(--accent); }
+h2 { font-size: 19px; font-weight: 800; color: var(--accent); }
+h3 { font-size: 15px; font-weight: 700; }
+p { margin: 0; }
+a { color: inherit; }
+
+.eyebrow {
+  color: var(--brand-nav);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.eyebrow::before { content: "\2022"; color: var(--accent); margin-right: 8px; }
+.lead { color: var(--brand-nav); font-size: 15px; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+
+.stack > * + * { margin-top: 14px; }
+.stack-l > * + * { margin-top: 26px; }
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+/* main отримує фокус програмно (для скролу й екранних читалок), рамка навколо всього екрана не потрібна */
+main:focus-visible { outline: none; }
+
+/* ---------- Нижня навігація ---------- */
+.tabbar {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  max-width: var(--app-w);
+  height: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(17, 18, 20, 0.97);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+}
+.tabbar a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  color: var(--muted); text-decoration: none;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.01em;
+}
+.tabbar svg { width: 22px; height: 22px; }
+.tabbar a.active { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+/* ---------- Кнопки ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 0 20px;
+  border: 0; border-radius: var(--radius-btn);
+  font: inherit; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  text-decoration: none; text-align: center;
+  cursor: pointer;
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+.btn-block { display: flex; width: 100%; }
+
+/* Основна кнопка: градієнт і темніший нижній край, як на сайті */
+.btn-primary {
+  background: linear-gradient(90deg, var(--brand-btn-from), var(--brand-btn-to));
+  color: var(--accent-ink);
+  box-shadow: 0 3px 0 var(--brand-btn-lip);
+  margin-bottom: 3px;
+}
+.btn-primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--brand-btn-lip); }
+
+.btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--line-strong); }
+.btn-ghost:active { transform: scale(.98); }
+
+/* Синій Telegram затемнено, щоб білий текст мав контраст понад 4.5:1 */
+.btn-tg { background: #0f78b4; color: #fff; box-shadow: 0 3px 0 #0b5d8a; margin-bottom: 3px; }
+.btn-tg:active { transform: translateY(2px); box-shadow: 0 1px 0 #0b5d8a; }
+
+.btn[disabled] { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none; }
+.btn-link {
+  background: none; border: 0; padding: 8px 0; color: var(--muted);
+  font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer;
+}
+
+/* ---------- Картки ---------- */
+.card {
+  display: block;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: inherit; text-decoration: none;
+}
+/* Виділена картка: тонка жовта межа без заливки, як блок «1000+ клієнтів» на сайті */
+.card.accent { border-color: var(--brand-yellow); background: rgba(246, 202, 26, 0.05); }
+.card.demo { border-style: dashed; border-color: var(--demo-line); background: var(--demo-soft); }
+.card.demo h3 { color: var(--demo); }
+
+.hero { padding: 6px 0 4px; }
+.hero h1 { margin: 10px 0 12px; }
+
+/* ---------- Чіпси й бейджі ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-block; padding: 4px 10px;
+  border-radius: 999px; border: 1px solid var(--line-strong);
+  font-size: 12px; font-weight: 600; color: var(--brand-nav);
+}
+.chip.accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.demo-badge {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 6px; background: var(--demo-soft); color: var(--demo);
+  font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------- Статистика: сірі картки з жовтою межею, як у блоці досягнень на сайті ---------- */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat {
+  padding: 14px 8px; text-align: center;
+  background: var(--brand-card);
+  border: 1px solid var(--brand-yellow-border);
+  border-radius: var(--radius-s);
+}
+.stat b { display: block; font-size: 30px; font-weight: 500; color: var(--accent); line-height: 1.1; }
+.stat span {
+  display: block; margin-top: 4px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Списки ---------- */
+.checks { list-style: none; margin: 0; padding: 0; }
+.checks li { position: relative; padding: 6px 0 6px 28px; }
+.checks li::before {
+  content: ""; position: absolute; left: 0; top: 11px;
+  width: 18px; height: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m2.5 8.5 3.5 3.5 7.5-8' fill='none' stroke='%23f6ca1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+.steps li { counter-increment: s; position: relative; padding: 8px 0 8px 40px; }
+.steps li::before {
+  content: counter(s);
+  position: absolute; left: 0; top: 6px;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 14px;
+}
+
+/* ---------- Програми ---------- */
+.program-card { position: relative; }
+.program-card h3 { font-size: 17px; margin: 8px 0 2px; }
+.program-card .sub { color: var(--muted); font-size: 14px; }
+.program-card .meta { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 14px; gap: 10px; flex-wrap: wrap; }
+.price { font-size: 24px; font-weight: 800; line-height: 1; color: var(--accent); }
+.price s { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.go { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.back { display: inline-block; margin-bottom: 14px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; }
+
+/* ---------- Тренування ---------- */
+.progressbar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.progressbar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .25s ease; }
+
+.ex {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; min-height: 64px; padding: 12px 14px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-s);
+  color: var(--text); font: inherit; text-align: left; cursor: pointer;
+}
+.ex + .ex { margin-top: 10px; }
+.ex-box {
+  flex: none; display: grid; place-items: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  border: 2px solid var(--line-strong);
+}
+.ex-body { flex: 1; min-width: 0; }
+.ex-body b { display: block; font-size: 15px; font-weight: 700; }
+.ex-body small { color: var(--muted); font-size: 12px; line-height: 1.35; display: block; }
+.ex[aria-checked="true"] { border-color: rgba(246, 202, 26, .55); background: var(--accent-soft); }
+.ex[aria-checked="true"] .ex-box {
+  background-color: var(--accent); border-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m3.5 8.5 3 3L12.5 5' fill='none' stroke='%23141414' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: center; background-repeat: no-repeat; background-size: 18px;
+}
+.ex[aria-checked="true"] .ex-body b { text-decoration: line-through; text-decoration-color: var(--accent); }
+
+.finished {
+  padding: 16px; text-align: center;
+  border-radius: var(--radius); color: var(--accent-ink);
+  background: linear-gradient(90deg, var(--brand-btn-from), var(--brand-btn-to));
+  box-shadow: 0 3px 0 var(--brand-btn-lip);
+}
+.finished b { display: block; font-size: 17px; font-weight: 800; text-transform: uppercase; }
+
+/* ---------- Календар ---------- */
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-head h3 { font-size: 15px; color: var(--accent); }
+.cal-nav {
+  width: 40px; height: 40px; border-radius: var(--radius-s);
+  border: 1px solid var(--line-strong); background: transparent; color: var(--text);
+  font: inherit; font-size: 18px; cursor: pointer;
+}
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-wd { text-align: center; font-size: 11px; font-weight: 700; color: var(--muted); padding-bottom: 2px; }
+.cal-day {
+  display: grid; place-items: center;
+  aspect-ratio: 1; border-radius: 8px;
+  background: var(--surface-2); font-size: 13px; color: var(--muted);
+}
+.cal-day.empty { background: none; }
+.cal-day.done { background: var(--accent); color: var(--accent-ink); font-weight: 800; }
+.cal-day.today { outline: 2px solid var(--text); outline-offset: 1px; }
+
+/* ---------- Форма звіту ---------- */
+.field { display: block; }
+.field > span { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.input {
+  width: 100%; min-height: 46px; padding: 10px 12px;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--line-strong); border-radius: var(--radius-s);
+  font: inherit; font-size: 16px; /* 16px: iOS не наближає поле при фокусі */
+}
+textarea.input { min-height: 84px; resize: vertical; }
+.mood { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mood button {
+  min-height: 44px; border-radius: var(--radius-s);
+  border: 1px solid var(--line-strong); background: transparent; color: var(--text);
+  font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.mood button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.preview {
+  margin: 0; padding: 12px; white-space: pre-wrap; word-break: break-word;
+  background: var(--bg); border: 1px dashed var(--line-strong); border-radius: var(--radius-s);
+  font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted);
+}
+
+/* ---------- Порожній стан, тост ---------- */
+.empty-state { padding: 28px 18px; text-align: center; }
+.empty-state p { margin: 8px 0 18px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(var(--tabbar-h) + 20px + env(safe-area-inset-bottom));
+  transform: translate(-50%, 12px);
+  z-index: 50; max-width: calc(100% - 32px);
+  padding: 10px 16px; border-radius: 999px;
+  background: var(--text); color: var(--bg);
+  font-size: 14px; font-weight: 700;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="logo" href="#/" aria-label="Chepelev Fitness: на головну">
+        <b>CHEPELEV</b>
+        <small>FITNESS</small>
+      </a>
+      <a class="icon-btn" id="topbar-tg" href="https://t.me/chepelev_vlad" target="_blank" rel="noopener" aria-label="Написати тренеру в Telegram">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M21.5 3.6 2.9 10.8c-1.3.5-1.2 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.3 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.2-.5-1.8-1.3-1.5Zm-3.3 3.6-8.4 7.6-.3 3.6-1.5-4.8 10.2-6.4Z"/></svg>
+      </a>
+    </header>
+
+    <div class="demo-strip" role="note">
+      <b>ДЕМО-ВЕРСІЯ</b> · вправи й дані прогресу умовні, не програми тренера
+    </div>
+
+    <main id="view" tabindex="-1"></main>
+
+    <nav class="tabbar" aria-label="Основна навігація">
+      <a href="#/" data-tab="home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3 3 10.5V21h6v-6h6v6h6V10.5L12 3Z"/></svg>
+        <span>Головна</span>
+      </a>
+      <a href="#/programs" data-tab="programs">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 4h8v8H3V4Zm10 0h8v8h-8V4ZM3 14h8v6H3v-6Zm10 0h8v6h-8v-6Z"/></svg>
+        <span>Програми</span>
+      </a>
+      <a href="#/workout" data-tab="workout">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2 9h2V6h2v12H4v-3H2V9Zm20 6h-2v3h-2V6h2v3h2v6ZM8 11h8v2H8v-2Z"/></svg>
+        <span>Тренування</span>
+      </a>
+      <a href="#/progress" data-tab="progress">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 20V10h4v10H4Zm6 0V4h4v16h-4Zm6 0v-7h4v7h-4Z"/></svg>
+        <span>Прогрес</span>
+      </a>
+    </nav>
+  </div>
+
+  <noscript><p style="padding:24px;font-family:sans-serif">Для роботи застосунку потрібен JavaScript.</p></noscript>
+  
+  
+  
+<script>
+/* ==========================================================================
+   ДАНІ ЗАСТОСУНКУ
+
+   Усе, що не позначене як ДЕМО, взято з відкритого вмісту https://chepelevfit.com
+   (станом на перегляд сайту). Нічого не додано від імені тренера.
+
+   Що НЕ взято з сайту й є умовним (позначається в інтерфейсі як «демо»):
+   - вправи в демо-тренуваннях (там лише заготовки «Вправа N»);
+   - дані прогресу, які з'являються після натискання кнопок демо.
+   ========================================================================== */
+(function () {
+  var CF = (window.CF = window.CF || {});
+
+  CF.TELEGRAM = 'https://t.me/chepelev_vlad';
+  CF.SITE = 'https://chepelevfit.com';
+  CF.SITE_PROGRAMS = 'https://chepelevfit.com/#rec2070264433';
+
+  /* Умовні заготовки вправ. Не є тренувальними рекомендаціями. */
+  function placeholderExercises(count) {
+    var list = [];
+    for (var i = 1; i <= count; i++) {
+      list.push({
+        name: 'Вправа ' + i,
+        hint: 'Умовна заготовка. У справжній програмі тут назва, підходи, повтори та відео від тренера.'
+      });
+    }
+    return list;
+  }
+
+  CF.programs = [
+    {
+      id: 'support',
+      title: 'Онлайн супровід',
+      subtitle: '1 місяць',
+      badge: 'Найпопулярніша програма',
+      price: 5000,
+      oldPrice: 6000,
+      chips: ['1 місяць', 'Персональний чат'],
+      features: [
+        'Індивідуальний план тренувань та харчування',
+        'На зв’язку 24/7',
+        'Персональний чат',
+        'Відслідковування результату кожного тижня'
+      ],
+      notes: ['Кількість місць обмежена', 'Вартість актуальна до кінця місяця'],
+      tgText: 'Вітаю! Хочу на онлайн тренування з супроводом. Можна детальніше про курс ?',
+      demoNote: 'У справжньому супроводі план індивідуальний. Тут показано лише приклад екрана, без реального плану.',
+      demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(5) }
+    },
+    {
+      id: 'boys',
+      title: 'Тренування для хлопців',
+      subtitle: 'Схуднення / Набір маси',
+      badge: '',
+      price: 1600,
+      oldPrice: 2200,
+      chips: ['Відео + PDF план', 'Тренажерний зал', 'Будь-який рівень'],
+      features: [
+        'Відео + PDF план',
+        'Підходить для будь-якого рівня',
+        'Для тренувань в тренажерному залі'
+      ],
+      notes: ['Вартість актуальна до кінця місяця'],
+      tgText: 'Вітаю! Хочу придбати онлайн тренування для хлопців. Можна детальніше про курс ?',
+      demoNote: 'Реальні вправи цієї програми доступні лише в матеріалах тренера. Тут умовні заготовки.',
+      demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(5) }
+    },
+    {
+      id: 'girls',
+      title: 'Тренування для дівчат',
+      subtitle: 'Схуднення та тонус мʼязів',
+      badge: '',
+      price: 1600,
+      oldPrice: 2200,
+      chips: ['Відео + PDF план', 'Тренажерний зал', 'Будь-який рівень'],
+      features: [
+        'Відео + PDF план',
+        'Підходить для будь-якого рівня',
+        'Для тренувань в тренажерному залі'
+      ],
+      notes: ['Вартість актуальна до кінця місяця'],
+      tgText: 'Вітаю! Хочу придбати онлайн тренування для дівчат. Можна детальніше про курс ?',
+      demoNote: 'Реальні вправи цієї програми доступні лише в матеріалах тренера. Тут умовні заготовки.',
+      demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(5) }
+    },
+    {
+      id: 'back',
+      title: 'Здорова спина',
+      subtitle: 'Зміцнення спини, профілактика болю',
+      badge: '',
+      price: 2000,
+      oldPrice: 2800,
+      chips: ['Відео', 'Вдома', 'Біль у спині'],
+      features: [
+        'Відео',
+        'Підходить для всіх, хто має біль в спині',
+        'Для тренувань в домашніх умовах'
+      ],
+      notes: ['Вартість актуальна до кінця місяця'],
+      tgText: 'Вітаю! Хочу придбати програму "Здорова спина". Можна детальніше про курс ?',
+      demoNote: 'Це лише приклад екрана. Умовні заготовки не є вправами для спини, їх не слід виконувати. Реальну програму надає тренер.',
+      demoWorkout: { title: 'Демо-тренування', exercises: placeholderExercises(4) }
+    }
+  ];
+
+  /* Як почати: з розділу сайту «як відбувається процес початку тренувань» */
+  CF.steps = [
+    'Обираєте програму та залишаєте заявку',
+    'Отримуєте повідомлення від мене в Telegram',
+    'Отримуєте програму та інструкцію',
+    'Починаєте тренуватись та рухатись до результату!'
+  ];
+
+  /* Про тренера: лише факти, які є на сайті */
+  CF.trainerFacts = [
+    'Вища освіта НУФВСУ у сфері фізичної культури та спорту',
+    'Кандидат у майстри спорту (КМС) з бодібілдингу',
+    '2-разовий віце-чемпіон України з бодібілдингу',
+    '10+ років досвіду роботи персональним тренером',
+    '20+ років у професійному спорті',
+    '1000+ задоволених клієнтів'
+  ];
+  CF.trainerDisclaimer = 'Результати індивідуальні і залежать від регулярності тренувань та харчування.';
+
+  CF.socials = [
+    { name: 'Telegram', url: 'https://t.me/chepelev_vlad' },
+    { name: 'Instagram', url: 'https://www.instagram.com/chepelev_vlad_/' },
+    { name: 'TikTok', url: 'https://www.tiktok.com/@chepelev_vlad?_r=1&_t=ZS-94yc09LeVRI' },
+    { name: 'Facebook', url: 'https://www.facebook.com/profile.php?id=100049232285788' }
+  ];
+})();
+
+/* ==========================================================================
+   Сховище прогресу в localStorage (лише на цьому пристрої, без сервера).
+   Якщо localStorage недоступний (приватний режим тощо) — працює в пам'яті
+   до перезавантаження сторінки.
+   ========================================================================== */
+(function () {
+  var CF = (window.CF = window.CF || {});
+  var KEY = 'chepelevfit.demo.v1';
+  var state = null;
+
+  function defaults() {
+    return { program: null, checks: {}, history: {} };
+  }
+
+  function read() {
+    if (state) return state;
+    var s = defaults();
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (raw) {
+        var p = JSON.parse(raw);
+        if (p && typeof p === 'object') {
+          s.program = typeof p.program === 'string' ? p.program : null;
+          s.checks = p.checks && typeof p.checks === 'object' ? p.checks : {};
+          s.history = p.history && typeof p.history === 'object' ? p.history : {};
+        }
+      }
+    } catch (e) { /* ігноруємо: працюємо з порожнім станом */ }
+    state = s;
+    return s;
+  }
+
+  function write() {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* пам'ять */ }
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function dateKey(d) {
+    d = d || new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  function daysAgo(n) {
+    var d = new Date();
+    d.setHours(12, 0, 0, 0);
+    d.setDate(d.getDate() - n);
+    return d;
+  }
+
+  function checkKey(programId) { return dateKey() + '|' + programId; }
+
+  var store = {
+    pad: pad,
+    dateKey: dateKey,
+
+    getProgram: function () { return read().program; },
+    setProgram: function (id) { read().program = id; write(); },
+
+    /* Відмічені вправи для сьогоднішнього дня: масив індексів */
+    getChecks: function (programId) {
+      return (read().checks[checkKey(programId)] || []).slice();
+    },
+    toggle: function (programId, index) {
+      var s = read();
+      var key = checkKey(programId);
+      var list = s.checks[key] || [];
+      var pos = list.indexOf(index);
+      if (pos === -1) list.push(index); else list.splice(pos, 1);
+      s.checks[key] = list;
+      write();
+    },
+
+    isFinished: function () { return !!read().history[dateKey()]; },
+    finish: function (programId) { read().history[dateKey()] = programId; write(); },
+    unfinish: function () { delete read().history[dateKey()]; write(); },
+
+    history: function () { return read().history; },
+    total: function () { return Object.keys(read().history).length; },
+
+    /* Серія днів поспіль: рахуємо від сьогодні (або від учора, якщо сьогодні ще не було) */
+    streak: function () {
+      var h = read().history;
+      var i = h[dateKey(daysAgo(0))] ? 0 : 1;
+      var n = 0;
+      while (h[dateKey(daysAgo(i))]) { n++; i++; }
+      return n;
+    },
+
+    /* Кількість зарахованих тренувань за останні 7 днів (включно із сьогодні) */
+    weekCount: function () {
+      var h = read().history;
+      var n = 0;
+      for (var i = 0; i < 7; i++) if (h[dateKey(daysAgo(i))]) n++;
+      return n;
+    },
+
+    /* ДЕМО: заповнює календар умовною історією для показу клієнту */
+    seedDemo: function () {
+      var h = read().history;
+      [1, 2, 4, 5, 7, 9, 10].forEach(function (off) {
+        var k = dateKey(daysAgo(off));
+        if (!h[k]) h[k] = 'demo';
+      });
+      write();
+    },
+    hasSeed: function () {
+      var h = read().history;
+      return Object.keys(h).some(function (k) { return h[k] === 'demo'; });
+    },
+
+    reset: function () {
+      state = defaults();
+      write();
+    }
+  };
+
+  CF.store = store;
+})();
+
+/* ==========================================================================
+   Chepelev Fit (демо): екрани, навігація, події.
+   Без залежностей і збірки; працює і з file://, і на Netlify.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var CF = window.CF;
+  var S = CF.store;
+  var viewEl = document.getElementById('view');
+
+  var MONTHS = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+    'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+  var WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
+
+  var now = new Date();
+  var cal = { y: now.getFullYear(), m: now.getMonth() };
+  var draft = { mood: '', weight: '', comment: '' };
+
+  /* ---------- Утиліти ---------- */
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function tg(text) {
+    return CF.TELEGRAM + (text ? '?text=' + encodeURIComponent(text) : '');
+  }
+
+  function byId(id) {
+    for (var i = 0; i < CF.programs.length; i++) if (CF.programs[i].id === id) return CF.programs[i];
+    return null;
+  }
+
+  function toast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'toast';
+      el.className = 'toast';
+      el.setAttribute('role', 'status');
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toast.t);
+    toast.t = setTimeout(function () { el.classList.remove('show'); }, 2200);
+  }
+
+  function priceHtml(p) {
+    return '<div class="price">' + p.price + ' грн<s>' + p.oldPrice + ' грн</s></div>';
+  }
+
+  /* ---------- Екран 1: Головна ---------- */
+  function viewHome() {
+    var p = byId(S.getProgram());
+    var today;
+
+    if (p) {
+      var total = p.demoWorkout.exercises.length;
+      var done = S.getChecks(p.id).length;
+      var finished = S.isFinished();
+      var status = finished ? 'Тренування зараховано (демо)' : 'Відмічено вправ: ' + done + ' з ' + total;
+      today =
+        '<section class="card accent">' +
+          '<div class="chips"><span class="chip accent">Моя програма</span><span class="demo-badge">демо</span></div>' +
+          '<h2 style="margin-top:10px">' + esc(p.title) + '</h2>' +
+          '<p class="muted" style="margin:6px 0 14px">Тренування на сьогодні · ' + esc(status) + '</p>' +
+          '<a class="btn btn-primary btn-block" href="#/workout">' + (finished ? 'Переглянути' : 'Почати') + '</a>' +
+        '</section>';
+    } else {
+      today =
+        '<section class="card accent">' +
+          '<h2>Тренування на сьогодні</h2>' +
+          '<p class="muted" style="margin:6px 0 14px">Спершу оберіть програму, і тут з’явиться ваше тренування.</p>' +
+          '<a class="btn btn-primary btn-block" href="#/programs">Обрати програму</a>' +
+        '</section>';
+    }
+
+    var facts = CF.trainerFacts.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
+    var steps = CF.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('');
+
+    return (
+      '<div class="stack-l">' +
+        '<section class="hero">' +
+          '<p class="eyebrow">Chepelev Fit · Мій план</p>' +
+          '<h1>Тренуємось правильно</h1>' +
+          '<p class="lead">Програма, відмітки виконання та прогрес в одному місці. Це демонстраційний прототип без реальних тренувальних матеріалів.</p>' +
+        '</section>' +
+        today +
+        '<section class="stats" aria-label="Коротка статистика">' +
+          '<div class="stat"><b>' + S.streak() + '</b><span>днів поспіль</span></div>' +
+          '<div class="stat"><b>' + S.total() + '</b><span>тренувань</span></div>' +
+          '<div class="stat"><b>' + S.weekCount() + '</b><span>за 7 днів</span></div>' +
+        '</section>' +
+        '<section class="stack">' +
+          '<h2>Як почати</h2>' +
+          '<div class="card"><ol class="steps">' + steps + '</ol></div>' +
+          '<a class="btn btn-tg btn-block" href="' + tg('Вітаю! Хочу дізнатися про тренування.') + '" target="_blank" rel="noopener">Написати тренеру в Telegram</a>' +
+        '</section>' +
+        '<section class="stack">' +
+          '<h2>Про тренера</h2>' +
+          '<div class="card"><ul class="checks">' + facts + '</ul>' +
+            '<p class="muted small" style="margin-top:12px">' + esc(CF.trainerDisclaimer) + '</p></div>' +
+          '<p class="muted small">Дані зі сайту <a href="' + CF.SITE + '" target="_blank" rel="noopener">chepelevfit.com</a>.</p>' +
+        '</section>' +
+      '</div>'
+    );
+  }
+
+  /* ---------- Екран 2: Програми ---------- */
+  function viewPrograms() {
+    var cards = CF.programs.map(function (p) {
+      var chips = p.chips.map(function (c) { return '<span class="chip">' + esc(c) + '</span>'; }).join('');
+      return (
+        '<a class="card program-card" href="#/program/' + p.id + '">' +
+          (p.badge ? '<span class="chip accent">' + esc(p.badge) + '</span>' : '') +
+          '<h3>' + esc(p.title) + '</h3>' +
+          '<p class="sub">' + esc(p.subtitle) + '</p>' +
+          '<div class="chips" style="margin-top:12px">' + chips + '</div>' +
+          '<div class="meta">' + priceHtml(p) + '<span class="go">Детальніше →</span></div>' +
+        '</a>'
+      );
+    }).join('');
+
+    return (
+      '<div class="stack-l">' +
+        '<section><p class="eyebrow">Каталог</p><h1>Програми</h1>' +
+          '<p class="lead" style="margin-top:10px">Чотири програми, представлені на сайті тренера.</p></section>' +
+        '<section class="stack">' + cards + '</section>' +
+        '<p class="muted small">Ціни наведено за даними сайту станом на перегляд. Актуальні умови уточнюйте в тренера.</p>' +
+      '</div>'
+    );
+  }
+
+  /* ---------- Сторінка програми ---------- */
+  function viewProgram(id) {
+    var p = byId(id);
+    if (!p) { location.hash = '#/programs'; return ''; }
+
+    var features = p.features.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
+    var notes = p.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('');
+    var isCurrent = S.getProgram() === p.id;
+
+    return (
+      '<div class="stack-l">' +
+        '<section>' +
+          '<a class="back" href="#/programs">← Усі програми</a>' +
+          (p.badge ? '<div><span class="chip accent">' + esc(p.badge) + '</span></div>' : '') +
+          '<h1 style="margin-top:8px">' + esc(p.title) + '</h1>' +
+          '<p class="lead" style="margin-top:8px">' + esc(p.subtitle) + '</p>' +
+        '</section>' +
+        '<section class="card"><h3 style="margin-bottom:8px">Що входить</h3><ul class="checks">' + features + '</ul></section>' +
+        '<section class="card">' +
+          priceHtml(p) +
+          '<ul class="small muted" style="margin:12px 0 0;padding-left:18px">' + notes + '</ul>' +
+          '<p class="muted small" style="margin-top:8px">Ціни за даними сайту станом на перегляд.</p>' +
+        '</section>' +
+        '<section class="stack">' +
+          '<a class="btn btn-tg btn-block" href="' + tg(p.tgText) + '" target="_blank" rel="noopener">Отримати програму в Telegram</a>' +
+          '<button class="btn btn-primary btn-block" data-action="start-demo" data-id="' + p.id + '">' +
+            (isCurrent ? 'Відкрити демо-тренування' : 'Спробувати демо-тренування') + '</button>' +
+          '<a class="btn btn-ghost btn-block" href="' + CF.SITE_PROGRAMS + '" target="_blank" rel="noopener">Ця програма на сайті</a>' +
+        '</section>' +
+        '<section class="card demo"><h3>Про демо</h3>' +
+          '<p class="small" style="margin-top:6px">' + esc(p.demoNote) + '</p>' +
+          '<p class="small" style="margin-top:6px">Кнопка «демо-тренування» нічого не купує і не відкриває платні матеріали.</p></section>' +
+      '</div>'
+    );
+  }
+
+  /* ---------- Екран 3: Моє тренування ---------- */
+  function viewWorkout() {
+    var p = byId(S.getProgram());
+    if (!p) {
+      return (
+        '<div class="stack-l">' +
+          '<section><p class="eyebrow">Сьогодні</p><h1>Моє тренування</h1></section>' +
+          '<section class="card empty-state">' +
+            '<h2>Програму не обрано</h2>' +
+            '<p class="muted">Оберіть програму в каталозі, щоб побачити демо-тренування.</p>' +
+            '<a class="btn btn-primary" href="#/programs">До програм</a>' +
+          '</section>' +
+        '</div>'
+      );
+    }
+
+    var list = p.demoWorkout.exercises;
+    var checked = S.getChecks(p.id);
+    var finished = S.isFinished();
+    var pct = Math.round((checked.length / list.length) * 100);
+    var all = checked.length === list.length;
+
+    var items = list.map(function (ex, i) {
+      var on = checked.indexOf(i) !== -1;
+      return (
+        '<button class="ex" role="checkbox" aria-checked="' + on + '" data-action="toggle-ex" data-i="' + i + '"' + (finished ? ' disabled' : '') + '>' +
+          '<span class="ex-box" aria-hidden="true"></span>' +
+          '<span class="ex-body"><b>' + esc(ex.name) + '</b><small>' + esc(ex.hint) + '</small></span>' +
+          '<span class="demo-badge">демо</span>' +
+        '</button>'
+      );
+    }).join('');
+
+    var action = finished
+      ? '<div class="finished"><b>Тренування зараховано</b><span>Відмічено в календарі (демо)</span></div>' +
+        '<button class="btn-link" data-action="unfinish">Скасувати відмітку</button>'
+      : '<button class="btn btn-primary btn-block" data-action="finish"' + (all ? '' : ' disabled') + '>Завершити тренування</button>' +
+        (all ? '' : '<p class="muted small" style="text-align:center">Відмітьте всі вправи, щоб завершити.</p>');
+
+    return (
+      '<div class="stack-l">' +
+        '<section>' +
+          '<p class="eyebrow">Сьогодні · ' + esc(p.title) + '</p>' +
+          '<h1 style="margin-top:6px">Моє тренування</h1>' +
+        '</section>' +
+        '<section class="card demo"><h3>Демо-екран</h3>' +
+          '<p class="small" style="margin-top:6px">Нижче умовні заготовки, а не вправи тренера й не тренувальні рекомендації. ' +
+          'У справжньому застосунку тут з’являться вправи з програми.</p></section>' +
+        '<section class="stack">' +
+          '<div class="progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
+          '<p class="muted small">Виконано: ' + checked.length + ' з ' + list.length + '</p>' +
+          '<div>' + items + '</div>' +
+          action +
+        '</section>' +
+        '<section><a class="btn btn-ghost btn-block" href="#/programs">Змінити програму</a></section>' +
+      '</div>'
+    );
+  }
+
+  /* ---------- Екран 4: Мій прогрес ---------- */
+  function calendarHtml() {
+    var y = cal.y, m = cal.m;
+    var offset = (new Date(y, m, 1).getDay() + 6) % 7; // тиждень починається з понеділка
+    var days = new Date(y, m + 1, 0).getDate();
+    var hist = S.history();
+    var todayKey = S.dateKey();
+    var cells = WEEKDAYS.map(function (w) { return '<span class="cal-wd">' + w + '</span>'; }).join('');
+    var i;
+    for (i = 0; i < offset; i++) cells += '<span class="cal-day empty"></span>';
+    for (i = 1; i <= days; i++) {
+      var key = y + '-' + S.pad(m + 1) + '-' + S.pad(i);
+      var cls = 'cal-day' + (hist[key] ? ' done' : '') + (key === todayKey ? ' today' : '');
+      cells += '<span class="' + cls + '"' + (hist[key] ? ' aria-label="' + i + ': тренування"' : '') + '>' + i + '</span>';
+    }
+    return (
+      '<div class="cal-head">' +
+        '<button class="cal-nav" data-action="cal-prev" aria-label="Попередній місяць">‹</button>' +
+        '<h3>' + MONTHS[m] + ' ' + y + '</h3>' +
+        '<button class="cal-nav" data-action="cal-next" aria-label="Наступний місяць">›</button>' +
+      '</div>' +
+      '<div class="cal-grid">' + cells + '</div>'
+    );
+  }
+
+  function reportText() {
+    var p = byId(S.getProgram());
+    var lines = ['Вітаю! Тижневий звіт (демо Chepelev Fit).'];
+    lines.push('Програма: ' + (p ? p.title : 'не обрано'));
+    lines.push('Тренувань за 7 днів: ' + S.weekCount());
+    if (draft.mood) lines.push('Самопочуття: ' + draft.mood);
+    if (draft.weight) lines.push('Вага: ' + draft.weight + ' кг');
+    if (draft.comment) lines.push('Коментар: ' + draft.comment);
+    if (S.hasSeed()) lines.push('Примітка: у календарі є умовні демо-відмітки.');
+    return lines.join('\n');
+  }
+
+  function viewProgress() {
+    var moods = ['Добре', 'Нормально', 'Важко'].map(function (m) {
+      return '<button type="button" data-action="mood" data-v="' + m + '" aria-pressed="' + (draft.mood === m) + '">' + m + '</button>';
+    }).join('');
+
+    return (
+      '<div class="stack-l">' +
+        '<section><p class="eyebrow">Прогрес</p><h1>Мій прогрес</h1></section>' +
+        '<section class="stats">' +
+          '<div class="stat"><b>' + S.streak() + '</b><span>днів поспіль</span></div>' +
+          '<div class="stat"><b>' + S.total() + '</b><span>тренувань</span></div>' +
+          '<div class="stat"><b>' + S.weekCount() + '</b><span>за 7 днів</span></div>' +
+        '</section>' +
+        '<section class="card" id="calendar">' + calendarHtml() + '</section>' +
+        '<section class="stack">' +
+          '<h2>Тижневий звіт тренеру</h2>' +
+          '<form class="card stack" id="report-form" autocomplete="off">' +
+            '<div class="field"><span>Самопочуття</span><div class="mood">' + moods + '</div></div>' +
+            '<label class="field"><span>Вага, кг (необов’язково)</span>' +
+              '<input class="input" name="weight" inputmode="decimal" maxlength="6" placeholder="напр. 70" value="' + esc(draft.weight) + '"></label>' +
+            '<label class="field"><span>Коментар (необов’язково)</span>' +
+              '<textarea class="input" name="comment" maxlength="400" placeholder="Як минув тиждень?">' + esc(draft.comment) + '</textarea></label>' +
+            '<div class="field"><span>Попередній перегляд повідомлення</span><pre class="preview" id="report-preview">' + esc(reportText()) + '</pre></div>' +
+            '<button type="button" class="btn btn-tg btn-block" data-action="send-report">Надіслати в Telegram</button>' +
+            '<button type="button" class="btn btn-ghost btn-block" data-action="copy-report">Скопіювати текст</button>' +
+          '</form>' +
+          '<p class="muted small">Звіт нікуди не відправляється автоматично: відкриється Telegram із готовим текстом, і ви самі його надішлете.</p>' +
+        '</section>' +
+        '<section class="card demo">' +
+          '<h3>Інструменти демо</h3>' +
+          '<p class="small" style="margin:6px 0 12px">Для показу клієнту можна заповнити календар умовними відмітками. Вони позначаються як демо і видаляються кнопкою «Скинути».</p>' +
+          '<div class="stack">' +
+            '<button class="btn btn-ghost btn-block" data-action="seed">Додати демо-відмітки</button>' +
+            '<button class="btn btn-ghost btn-block" data-action="reset">Скинути всі дані демо</button>' +
+          '</div>' +
+        '</section>' +
+      '</div>'
+    );
+  }
+
+  /* ---------- Маршрутизація ---------- */
+  function route() {
+    var parts = (location.hash.replace(/^#/, '') || '/').split('/').filter(Boolean);
+    var name = parts[0] || 'home';
+    var html, tab, title;
+
+    switch (name) {
+      case 'programs': html = viewPrograms(); tab = 'programs'; title = 'Програми'; break;
+      case 'program':  html = viewProgram(parts[1]); tab = 'programs'; title = 'Програма'; break;
+      case 'workout':  html = viewWorkout(); tab = 'workout'; title = 'Моє тренування'; break;
+      case 'progress': html = viewProgress(); tab = 'progress'; title = 'Мій прогрес'; break;
+      default:         html = viewHome(); tab = 'home'; title = 'Мій план';
+    }
+
+    viewEl.innerHTML = html;
+    document.title = title + ' · Chepelev Fit (демо)';
+    var tabs = document.querySelectorAll('.tabbar a');
+    for (var i = 0; i < tabs.length; i++) {
+      var on = tabs[i].getAttribute('data-tab') === tab;
+      tabs[i].classList.toggle('active', on);
+      if (on) tabs[i].setAttribute('aria-current', 'page'); else tabs[i].removeAttribute('aria-current');
+    }
+  }
+
+  function navigated() {
+    route();
+    window.scrollTo(0, 0);
+    viewEl.focus({ preventScroll: true });
+  }
+
+  /* Перемальовка без стрибка прокрутки (після кліку на кнопку) */
+  function rerender() {
+    var y = window.scrollY;
+    route();
+    window.scrollTo(0, y);
+  }
+
+  /* ---------- Події ---------- */
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy') ? resolve() : reject(); } catch (e) { reject(e); }
+      document.body.removeChild(ta);
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-action]');
+    if (!el || el.disabled) return;
+    var a = el.getAttribute('data-action');
+    var pid = S.getProgram();
+
+    switch (a) {
+      case 'start-demo':
+        S.setProgram(el.getAttribute('data-id'));
+        location.hash = '#/workout';
+        break;
+      case 'toggle-ex':
+        if (pid) { S.toggle(pid, parseInt(el.getAttribute('data-i'), 10)); rerender(); }
+        break;
+      case 'finish':
+        if (pid) { S.finish(pid); rerender(); toast('Тренування зараховано (демо)'); }
+        break;
+      case 'unfinish':
+        S.unfinish(); rerender();
+        break;
+      case 'cal-prev':
+        cal.m--; if (cal.m < 0) { cal.m = 11; cal.y--; }
+        rerender();
+        break;
+      case 'cal-next':
+        cal.m++; if (cal.m > 11) { cal.m = 0; cal.y++; }
+        rerender();
+        break;
+      case 'mood':
+        draft.mood = draft.mood === el.getAttribute('data-v') ? '' : el.getAttribute('data-v');
+        rerender();
+        break;
+      case 'send-report':
+        window.open(tg(reportText()), '_blank', 'noopener');
+        break;
+      case 'copy-report':
+        copyText(reportText()).then(
+          function () { toast('Текст скопійовано'); },
+          function () { toast('Не вдалося скопіювати'); }
+        );
+        break;
+      case 'seed':
+        S.seedDemo(); rerender(); toast('Додано демо-відмітки');
+        break;
+      case 'reset':
+        if (window.confirm('Видалити всі дані демо на цьому пристрої?')) {
+          S.reset();
+          draft = { mood: '', weight: '', comment: '' };
+          rerender();
+          toast('Дані демо скинуто');
+        }
+        break;
+    }
+  });
+
+  /* Поля звіту: оновлюємо чернетку й попередній перегляд без перемальовки (щоб не губити фокус) */
+  document.addEventListener('input', function (e) {
+    var form = e.target.closest('#report-form');
+    if (!form) return;
+    if (e.target.name === 'weight') draft.weight = e.target.value.replace(/[^\d.,]/g, '');
+    if (e.target.name === 'comment') draft.comment = e.target.value.trim();
+    var pre = document.getElementById('report-preview');
+    if (pre) pre.textContent = reportText();
+  });
+
+  window.addEventListener('hashchange', navigated);
+
+  /* Старт */
+  navigated();
+
+})();
+
+</script>
+</body>
+</html>
